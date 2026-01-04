@@ -1,11 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { Moon, Sun, LogOut, Menu, Sparkles } from "lucide-react";
+import { Moon, Sun, LogOut, Menu, Search, Bell } from "lucide-react";
 import Button from "@/components/ui/Button";
-import Badge from "@/components/ui/Badge";
 
 interface NavbarProps {
   onMenuClick?: () => void;
@@ -14,6 +13,7 @@ interface NavbarProps {
 export default function Navbar({ onMenuClick }: NavbarProps) {
   const { theme, toggleTheme } = useTheme();
   const { user, logout } = useAuth();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const getRoleName = (role: string) => {
     const roles: Record<string, string> = {
@@ -24,59 +24,64 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
     return roles[role] || role;
   };
 
-  const getRoleColor = (role: string) => {
-    const colors: Record<string, string> = {
-      admin: "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800",
-      staff: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800",
-      customer: "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800",
-    };
-    return colors[role] || "";
-  };
-
   return (
-    <nav className="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 shadow-sm">
-      <div className="px-4 lg:px-6">
-        <div className="flex items-center justify-between h-16">
-          {/* Left: Logo & Menu */}
-          <div className="flex items-center gap-4">
-            <button
-              onClick={onMenuClick}
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-gray-300"
-            >
-              <Menu className="w-6 h-6" />
-            </button>
-            <div className="flex items-center gap-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-white" />
-              </div>
-              <div className="hidden sm:block">
-                <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                  ระบบจัดการร้านซักอบรีด
-                </h1>
-              </div>
+    <nav className="sticky top-0 z-40 bg-white dark:bg-neutral-900 border-b border-neutral-200 dark:border-neutral-800">
+      <div className="px-6 py-4">
+        <div className="flex items-center justify-between gap-6">
+          {/* Left: Menu Button */}
+          <button
+            onClick={onMenuClick}
+            className="lg:hidden p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
+
+          {/* Center: Search Bar */}
+          <div className="flex-1 max-w-md hidden md:flex items-center">
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+              <input
+                type="text"
+                placeholder="ค้นหาลูกค้า, สินค้า, ฯลฯ..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-neutral-100 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100 placeholder-neutral-500 focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+              />
             </div>
           </div>
 
-          {/* Right: User info & Actions */}
-          <div className="flex items-center gap-3">
+          {/* Right: Actions */}
+          <div className="flex items-center gap-4">
+            {/* Notifications */}
+            <button className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 relative">
+              <Bell className="w-5 h-5" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-danger-500 rounded-full" />
+            </button>
+
+            {/* Divider */}
+            <div className="w-px h-6 bg-neutral-200 dark:bg-neutral-700" />
+
+            {/* User Profile */}
             {user && (
-              <div className="hidden md:flex items-center gap-2">
-                <span className="text-sm text-gray-700 dark:text-gray-300">
-                  {user.name}
-                </span>
-                <span
-                  className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getRoleColor(
-                    user.role
-                  )}`}
-                >
-                  {getRoleName(user.role)}
-                </span>
+              <div className="flex items-center gap-3">
+                <div className="hidden sm:flex flex-col items-end">
+                  <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                    {user.name}
+                  </p>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    {getRoleName(user.role)}
+                  </p>
+                </div>
+                <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                  {user.name.charAt(0)}
+                </div>
               </div>
             )}
 
+            {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 text-gray-700 dark:text-gray-300 transition-colors"
+              className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors"
               aria-label="Toggle theme"
             >
               {theme === "light" ? (
@@ -86,10 +91,11 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
               )}
             </button>
 
+            {/* Logout */}
             {user && (
               <button
                 onClick={logout}
-                className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 transition-colors"
+                className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-neutral-700 dark:text-neutral-300 hover:text-danger-600 transition-colors"
                 aria-label="Logout"
               >
                 <LogOut className="w-5 h-5" />
