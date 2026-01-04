@@ -16,17 +16,17 @@ export default function Card({
 }: CardProps) {
   const variantStyles = {
     default:
-      "bg-white dark:bg-neutral-900 rounded-lg shadow-card border border-neutral-200 dark:border-neutral-800",
+      "bg-white dark:bg-neutral-900 rounded-xl shadow-md border border-neutral-100 dark:border-neutral-800",
     elevated:
-      "bg-white dark:bg-neutral-900 rounded-lg shadow-lg border border-neutral-100 dark:border-neutral-800",
+      "bg-white dark:bg-neutral-900 rounded-xl shadow-lg border border-neutral-100 dark:border-neutral-800",
   };
 
   return (
     <div
       className={cn(
         variantStyles[variant],
-        "p-6",
-        hover && "hover:shadow-card-hover transition-shadow duration-200 cursor-pointer",
+        "p-5 lg:p-6",
+        hover && "hover:shadow-lg transition-shadow duration-200 cursor-pointer",
         className
       )}
     >
@@ -55,7 +55,7 @@ export function CardTitle({
   return (
     <h3
       className={cn(
-        "text-lg font-semibold text-neutral-900 dark:text-neutral-100",
+        "text-base lg:text-lg font-semibold text-neutral-900 dark:text-neutral-100",
         className
       )}
     >
